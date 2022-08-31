@@ -5,7 +5,7 @@ import styles from './search.module.scss';
 
 const Search = () => {
   const [value, setValue] = useState('');
-  const { searchValue, setSearchValue } = React.useContext(SearchContext);
+  const { setSearchValue } = React.useContext(SearchContext);
   const inputRef = React.useRef();
 
   const onChangeInput = (event) => {
