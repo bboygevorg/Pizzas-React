@@ -1,31 +1,44 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectSort, setSort } from '../redux/slices/filterSlice';
+import { selectSort } from '../redux/slices/filter/selector';
+import { setSort } from '../redux/slices/filter/slice';
+import { SortPropertyEnam } from '../redux/slices/filter/types';
 
-export const list = [
-  { name: 'популярности (DESC)', sortProperty: 'rating' },
-  { name: 'популярности (ASC)', sortProperty: '-rating' },
-  { name: 'цене (DESC)', sortProperty: 'price' },
-  { name: 'цене (ASC)', sortProperty: '-price' },
-  { name: 'алфавиту (DESC)', sortProperty: 'title' },
-  { name: 'алфавиту (ASC)', sortProperty: '-title' },
+type SortItem = {
+  name: string;
+  sortProperty: SortPropertyEnam;
+};
+
+type PopupClick = MouseEvent & {
+  path: Node[];
+};
+
+export const list: SortItem[] = [
+  { name: 'популярности (DESC)', sortProperty: SortPropertyEnam.PRICE_DESC },
+  { name: 'популярности (ASC)', sortProperty: SortPropertyEnam.PRICE_ASC },
+  { name: 'цене (DESC)', sortProperty: SortPropertyEnam.PRICE_DESC },
+  { name: 'цене (ASC)', sortProperty: SortPropertyEnam.PRICE_DESC },
+  { name: 'алфавиту (DESC)', sortProperty: SortPropertyEnam.TITLE_DESC },
+  { name: 'алфавиту (ASC)', sortProperty: SortPropertyEnam.TITLE_ASC },
 ];
 
-const Sort = () => {
+const SortPopup: React.FC = React.memo(() => {
   const sort = useSelector(selectSort);
   const dispatch = useDispatch();
-  const sortRef = React.useRef();
+  const sortRef = React.useRef<HTMLDivElement>(null);
 
   const [isVisible, setIsVisible] = React.useState(false);
 
-  const onClickListItem = (obj) => {
+  const onClickListItem = (obj: SortItem) => {
     dispatch(setSort(obj));
     setIsVisible(false);
   };
 
   React.useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.path.includes(sortRef.current)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      const _event = event as PopupClick;
+
+      if (sortRef.current && !_event.path.includes(sortRef.current)) {
         setIsVisible(false);
       }
     };
@@ -33,7 +46,7 @@ const Sort = () => {
     document.body.addEventListener('click', handleClickOutside);
 
     return () => {
-      document.body.removeEventListener('clcik', handleClickOutside);
+      document.body.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
@@ -72,6 +85,6 @@ const Sort = () => {
       )}
     </div>
   );
-};
+});
 
-export default Sort;
+export default SortPopup;

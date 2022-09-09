@@ -1,15 +1,35 @@
 import React from 'react';
+import clsx from 'clsx';
 import { useDispatch } from 'react-redux';
-import { addItem, minusItem, removeItem } from '../redux/slices/cartSlice';
+import { addItem, minusItem, removeItem } from '../redux/slices/cart/slice';
+import { CartItem } from '../redux/slices/cart/types';
 
-const CartItem = ({ id, name, types, sizes, price, count, imageUrl }) => {
+type CartItemProps = {
+  id: string;
+  name: string;
+  types: string;
+  sizes: number;
+  price: number;
+  count: number;
+  imageUrl: string;
+};
+
+export const CartItemBlock: React.FC<CartItemProps> = ({
+  id,
+  name,
+  types,
+  sizes,
+  price,
+  count,
+  imageUrl,
+}) => {
   const dispatch = useDispatch();
 
   const onClickPlus = () => {
     dispatch(
       addItem({
         id,
-      }),
+      } as CartItem),
     );
   };
   const onClickMinus = () => {
@@ -34,9 +54,12 @@ const CartItem = ({ id, name, types, sizes, price, count, imageUrl }) => {
         </p>
       </div>
       <div className="cart__item-count">
-        <div
+        <button
+          disabled={count === 1}
           onClick={onClickMinus}
-          className="button button--outline button--circle cart__item-count-minus">
+          className={clsx('button button--outline button--circle cart__item-count-minus', {
+            'cart__item-count-minus--disabled': count === 1,
+          })}>
           <svg
             width="10"
             height="10"
@@ -52,7 +75,7 @@ const CartItem = ({ id, name, types, sizes, price, count, imageUrl }) => {
               fill="#EB5A1E"
             />
           </svg>
-        </div>
+        </button>
         <b>{count}</b>
         <div
           onClick={onClickPlus}
@@ -100,4 +123,4 @@ const CartItem = ({ id, name, types, sizes, price, count, imageUrl }) => {
   );
 };
 
-export default CartItem;
+export default CartItemBlock;

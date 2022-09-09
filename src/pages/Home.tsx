@@ -1,22 +1,27 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../redux/store';
+import { selectFilter } from '../redux/slices/filter/selector';
+import { selectPizzaData } from '../redux/slices/pizza/selectors';
+
 import qs from 'qs';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
 import Pagination from '../components/pagination';
-import { selectFilter, setFilters } from '../redux/slices/filterSlice';
-import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
 
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/pizzaBlock';
 import Skeleton from '../components/pizzaBlock/Skeleton';
+import { fetchPizzas } from '../redux/slices/pizza/slice';
 
-function Home() {
+const Home: React.FC = () => {
   const { categoryId, sort, pageCount, searchValue } = useSelector(selectFilter);
   const { items, status } = useSelector(selectPizzaData);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
 
@@ -33,8 +38,8 @@ function Home() {
         sortBy,
         order,
         search,
-        page,
-        pageCount,
+        page: String(page),
+        pageCount: String(pageCount),
       }),
     );
 
@@ -49,49 +54,42 @@ function Home() {
 
     //   return false;
     // })
-    .map((obj, index) => (
-      <Link key={`${obj}_${index}`} to={`/pizza/${obj.id}`}>
-        <PizzaBlock {...obj} />
-      </Link>
-    ));
+    .map((obj: any, index: number) => <PizzaBlock key={obj.id} {...obj} />);
 
   const skeletons = [...new Array(12)].map((_, index) => <Skeleton key={index} />);
 
   //Если изменили параметры и был первый рендер
-  React.useEffect(() => {
-    if (isMounted.current) {
-      const queryString = qs.stringify({
-        sortProperty: sort.sortProperty,
-        categoryId,
-        pageCount,
-      });
-      navigate(`?${queryString}`);
-    }
-    isMounted.current = true;
-  }, [categoryId, sort.sortProperty, pageCount]);
+  // React.useEffect(() => {
+  //   if (isMounted.current) {
+  //     const queryString = qs.stringify({
+  //       sortProperty: sort.sortProperty,
+  //       categoryId,
+  //       pageCount,
+  //     });
+  //     navigate(`?${queryString}`);
+  //   }
+  //   isMounted.current = true;
+  // }, [categoryId, sort.sortProperty, pageCount]);
 
   //Если был первый рендер, то проверяем URL-параметры и сохраняем в редуксе
-  React.useEffect(() => {
-    if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
-      const sort = list.find((obj) => obj.sortProperty === params.sortProperty);
+  // React.useEffect(() => {
+  //   if (window.location.search) {
+  //     const params = qs.parse(window.location.search.substring(1)) as unknown as SeacrhPizzaParams;
+  //     const sort = list.find((obj) => obj.sortProperty === params.sortBy);
 
-      dispatch(
-        setFilters({
-          ...params,
-          sort,
-        }),
-      );
-      isSearch.current = true;
-    }
-  }, []);
+  //     dispatch(
+  //       setFilters({
+  //         ...params,
+  //         sort: sort || list[0]
+  //       }),
+  //     );
+  //     isSearch.current = true;
+  //   }
+  // }, []);
 
-  //Если был первый рендер то запрашиваем пиццы
+  // Если был первый рендер то запрашиваем пиццы
   React.useEffect(() => {
-    if (!isSearch.current) {
-      getPizzas();
-    }
-    isSearch.current = false;
+    getPizzas();
   }, [categoryId, sort.sortProperty, searchValue, pageCount]);
 
   return (
@@ -104,7 +102,7 @@ function Home() {
       {status === 'error' ? (
         <div className="content__error-info">
           <h2>Произошла ошибка😕</h2>
-          <p>К сожалению, не удалось получить пиццы. попробуйтк повторить попытку позже</p>
+          <p>К сожалению, не удалось получить пиццы. попробуйте повторить попытку позже</p>
         </div>
       ) : (
         <div className="content__items">{status === 'loading' ? skeletons : pizzas}</div>
@@ -113,6 +111,6 @@ function Home() {
       <Pagination />
     </div>
   );
-}
+};
 
 export default Home;
