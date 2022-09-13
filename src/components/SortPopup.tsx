@@ -14,15 +14,15 @@ type PopupClick = MouseEvent & {
 };
 
 export const list: SortItem[] = [
-  { name: 'популярности (DESC)', sortProperty: SortPropertyEnam.PRICE_DESC },
-  { name: 'популярности (ASC)', sortProperty: SortPropertyEnam.PRICE_ASC },
+  { name: 'популярности (DESC)', sortProperty: SortPropertyEnam.RATING_DESC },
+  { name: 'популярности (ASC)', sortProperty: SortPropertyEnam.RATING_ASC },
   { name: 'цене (DESC)', sortProperty: SortPropertyEnam.PRICE_DESC },
-  { name: 'цене (ASC)', sortProperty: SortPropertyEnam.PRICE_DESC },
-  { name: 'алфавиту (DESC)', sortProperty: SortPropertyEnam.TITLE_DESC },
-  { name: 'алфавиту (ASC)', sortProperty: SortPropertyEnam.TITLE_ASC },
+  { name: 'цене (ASC)', sortProperty: SortPropertyEnam.PRICE_ASC },
+  { name: 'алфавиту (DESC)', sortProperty: SortPropertyEnam.NAME_DESC },
+  { name: 'алфавиту (ASC)', sortProperty: SortPropertyEnam.NAME_ASC },
 ];
 
-const SortPopup: React.FC = React.memo(() => {
+export const SortPopup: React.FC = React.memo(() => {
   const sort = useSelector(selectSort);
   const dispatch = useDispatch();
   const sortRef = React.useRef<HTMLDivElement>(null);
@@ -86,5 +86,3 @@ const SortPopup: React.FC = React.memo(() => {
     </div>
   );
 });
-
-export default SortPopup;

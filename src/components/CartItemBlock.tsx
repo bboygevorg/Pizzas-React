@@ -122,5 +122,3 @@ export const CartItemBlock: React.FC<CartItemProps> = ({
     </div>
   );
 };
-
-export default CartItemBlock;

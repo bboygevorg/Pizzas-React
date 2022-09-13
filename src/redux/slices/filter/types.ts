@@ -5,8 +5,8 @@ export enum SortPropertyEnam {
   RATING_ASC = '-rating',
   PRICE_DESC = 'price',
   PRICE_ASC = '-price',
-  TITLE_DESC = 'title',
-  TITLE_ASC = '-title',
+  NAME_DESC = 'name',
+  NAME_ASC = '-name',
 }
 
 export interface FilterSliceState {

@@ -1,5 +1,5 @@
 import React from 'react';
-import NotFoundBLock from '../components/notFoundBLock/index';
+import { NotFoundBLock } from '../components';
 
 const NotFound: React.FC = () => {
   return (

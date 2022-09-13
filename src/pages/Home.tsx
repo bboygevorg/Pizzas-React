@@ -7,12 +7,9 @@ import { selectFilter } from '../redux/slices/filter/selector';
 import { selectPizzaData } from '../redux/slices/pizza/selectors';
 
 import qs from 'qs';
-import Pagination from '../components/pagination';
 
-import Categories from '../components/Categories';
-import Sort, { list } from '../components/Sort';
-import PizzaBlock from '../components/pizzaBlock';
-import Skeleton from '../components/pizzaBlock/Skeleton';
+import { Pagination, Categories, SortPopup, PizzaBlock, Skeleton } from '../components';
+
 import { fetchPizzas } from '../redux/slices/pizza/slice';
 
 const Home: React.FC = () => {
@@ -96,7 +93,7 @@ const Home: React.FC = () => {
     <div className="container">
       <div className="content__top">
         <Categories />
-        <Sort />
+        <SortPopup />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === 'error' ? (
